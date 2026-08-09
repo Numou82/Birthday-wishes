@@ -42,7 +42,7 @@
       100% { transform: translateY(-10vh) scale(1.2) rotate(360deg); opacity: 0; }
     }
 
-    /* Main Container */
+    /* Main Card Container */
     .card {
       position: relative;
       z-index: 10;
@@ -81,27 +81,29 @@
 
     /* Character Avatars */
     .character {
-      width: 100px;
-      height: 100px;
+      width: 110px;
+      height: 110px;
       border-radius: 50%;
       background-size: cover;
       background-position: center;
-      border: 3px solid #fbbf24;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+      background-repeat: no-repeat;
+      border: 4px solid #fbbf24;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.5);
       position: absolute;
       transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
 
-    /* Tom Avatar */
+    /* Reliable Tom & Jerry Image Sources */
     .tom {
-      background-image: url('https://upload.wikimedia.org/wikipedia/en/f/f6/Tom_Cat.png');
-      left: 20%;
+      background-image: url('https://i.imgur.com/8QZ7A0G.png'), url('https://cdn-icons-png.flaticon.com/512/616/616408.png');
+      background-color: #4b5563;
+      left: 15%;
     }
 
-    /* Jerry Avatar */
     .jerry {
-      background-image: url('https://upload.wikimedia.org/wikipedia/en/2/2f/Jerry_Mouse.png');
-      right: 20%;
+      background-image: url('https://i.imgur.com/kM8G1C3.png'), url('https://cdn-icons-png.flaticon.com/512/616/616430.png');
+      background-color: #9a3412;
+      right: 15%;
     }
 
     /* Fighting Animations */
@@ -116,13 +118,13 @@
     }
 
     @keyframes brawlTom {
-      0% { transform: translateX(30px) rotate(-15deg) scale(1.1); }
-      100% { transform: translateX(55px) rotate(15deg) scale(0.9); }
+      0% { transform: translateX(25px) rotate(-15deg) scale(1.1); }
+      100% { transform: translateX(50px) rotate(15deg) scale(0.9); }
     }
 
     @keyframes brawlJerry {
-      0% { transform: translateX(-30px) rotate(15deg) scale(0.9); }
-      100% { transform: translateX(-55px) rotate(-15deg) scale(1.1); }
+      0% { transform: translateX(-25px) rotate(15deg) scale(0.9); }
+      100% { transform: translateX(-50px) rotate(-15deg) scale(1.1); }
     }
 
     @keyframes fightShake {
@@ -136,12 +138,12 @@
     }
 
     .peaceful .tom {
-      transform: translateX(-25px) scale(1.05);
+      transform: translateX(-20px) scale(1.05);
       animation: happyBounce 0.8s infinite alternate;
     }
 
     .peaceful .jerry {
-      transform: translateX(25px) scale(1.05);
+      transform: translateX(20px) scale(1.05);
       animation: happyBounce 0.8s infinite alternate 0.4s;
     }
 
@@ -150,7 +152,7 @@
       100% { transform: translateY(-12px) scale(1.05); }
     }
 
-    /* Banner & Text */
+    /* Titles & Subtitles */
     .subtitle {
       text-transform: uppercase;
       letter-spacing: 2px;
@@ -239,8 +241,8 @@
     <!-- Tom and Jerry Animated Stage -->
     <div class="tj-stage fighting" id="tjStage">
       <div class="dust-cloud"></div>
-      <div class="character tom" title="Tom"></div>
-      <div class="character jerry" title="Jerry"></div>
+      <div class="character tom" id="tomChar" title="Tom"></div>
+      <div class="character jerry" id="jerryChar" title="Jerry"></div>
     </div>
 
     <button class="btn" id="stopBtn" onclick="stopFightAndWish()">
