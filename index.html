@@ -6,7 +6,7 @@
   <title>Happy Birthday Rakiba!</title>
 
   <!-- Google Fonts & Canvas Confetti Library -->
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Sacramento&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Fredoka+One&family=Sacramento&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
   <style>
@@ -23,11 +23,11 @@
       align-items: center;
       background: linear-gradient(135deg, #0f172a, #31103f, #1e1b4b);
       font-family: 'Poppins', sans-serif;
-      overflow: hidden;
+      overflow-x: hidden;
       color: #fff;
     }
 
-    /* Floating Background Particle Animation */
+    /* Floating Background Hearts/Stars */
     .bg-heart {
       position: absolute;
       color: rgba(236, 72, 153, 0.3);
@@ -37,20 +37,12 @@
     }
 
     @keyframes floatUp {
-      0% {
-        transform: translateY(100vh) scale(0.5) rotate(0deg);
-        opacity: 0;
-      }
-      50% {
-        opacity: 0.8;
-      }
-      100% {
-        transform: translateY(-10vh) scale(1.2) rotate(360deg);
-        opacity: 0;
-      }
+      0% { transform: translateY(100vh) scale(0.5) rotate(0deg); opacity: 0; }
+      50% { opacity: 0.8; }
+      100% { transform: translateY(-10vh) scale(1.2) rotate(360deg); opacity: 0; }
     }
 
-    /* Card Container with Pulse Animation */
+    /* Main Container */
     .card {
       position: relative;
       z-index: 10;
@@ -59,65 +51,139 @@
       -webkit-backdrop-filter: blur(16px);
       border: 1px solid rgba(255, 255, 255, 0.2);
       border-radius: 24px;
-      padding: 40px 30px;
+      padding: 30px 20px;
       width: 90%;
-      max-width: 440px;
+      max-width: 460px;
       text-align: center;
       box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
-      animation: cardAppear 1.2s ease-out;
     }
 
-    @keyframes cardAppear {
-      from { opacity: 0; transform: scale(0.8) translateY(30px); }
-      to { opacity: 1; transform: scale(1) translateY(0); }
+    /* Tom and Jerry Stage */
+    .tj-stage {
+      position: relative;
+      height: 160px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 10px;
     }
 
+    /* Fighting Dust Cloud Effect */
+    .dust-cloud {
+      position: absolute;
+      width: 140px;
+      height: 100px;
+      background: rgba(255, 255, 255, 0.25);
+      border-radius: 50%;
+      filter: blur(8px);
+      animation: fightShake 0.15s infinite alternate;
+    }
+
+    /* Character Avatars */
+    .character {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      background-size: cover;
+      background-position: center;
+      border: 3px solid #fbbf24;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+      position: absolute;
+      transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    /* Tom Avatar */
+    .tom {
+      background-image: url('https://upload.wikimedia.org/wikipedia/en/f/f6/Tom_Cat.png');
+      left: 20%;
+    }
+
+    /* Jerry Avatar */
+    .jerry {
+      background-image: url('https://upload.wikimedia.org/wikipedia/en/2/2f/Jerry_Mouse.png');
+      right: 20%;
+    }
+
+    /* Fighting Animations */
+    .fighting .tom {
+      animation: brawlTom 0.2s infinite alternate;
+      z-index: 3;
+    }
+
+    .fighting .jerry {
+      animation: brawlJerry 0.2s infinite alternate;
+      z-index: 4;
+    }
+
+    @keyframes brawlTom {
+      0% { transform: translateX(30px) rotate(-15deg) scale(1.1); }
+      100% { transform: translateX(55px) rotate(15deg) scale(0.9); }
+    }
+
+    @keyframes brawlJerry {
+      0% { transform: translateX(-30px) rotate(15deg) scale(0.9); }
+      100% { transform: translateX(-55px) rotate(-15deg) scale(1.1); }
+    }
+
+    @keyframes fightShake {
+      0% { transform: scale(1) rotate(-5deg); }
+      100% { transform: scale(1.2) rotate(5deg); }
+    }
+
+    /* Stopped / Peaceful State */
+    .peaceful .dust-cloud {
+      display: none;
+    }
+
+    .peaceful .tom {
+      transform: translateX(-25px) scale(1.05);
+      animation: happyBounce 0.8s infinite alternate;
+    }
+
+    .peaceful .jerry {
+      transform: translateX(25px) scale(1.05);
+      animation: happyBounce 0.8s infinite alternate 0.4s;
+    }
+
+    @keyframes happyBounce {
+      0% { transform: translateY(0) scale(1); }
+      100% { transform: translateY(-12px) scale(1.05); }
+    }
+
+    /* Banner & Text */
     .subtitle {
       text-transform: uppercase;
-      letter-spacing: 3px;
-      font-size: 0.8rem;
+      letter-spacing: 2px;
+      font-size: 0.85rem;
       color: #f472b6;
       font-weight: 600;
-      margin-bottom: 8px;
+      margin-bottom: 5px;
     }
 
     .name-title {
-      font-family: 'Sacramento', cursive;
-      font-size: 3.8rem;
+      font-family: 'Fredoka One', cursive;
+      font-size: 2.4rem;
       color: #fbbf24;
       text-shadow: 0 0 15px rgba(251, 191, 36, 0.5);
       margin-bottom: 12px;
-      line-height: 1;
-      animation: glow 2s ease-in-out infinite alternate;
+      line-height: 1.1;
     }
 
-    @keyframes glow {
-      from { text-shadow: 0 0 10px rgba(251, 191, 36, 0.4); }
-      to { text-shadow: 0 0 25px rgba(251, 191, 36, 0.9), 0 0 35px rgba(236, 72, 153, 0.6); }
-    }
-
-    .brief-wish {
-      font-size: 0.95rem;
-      color: #e2e8f0;
-      line-height: 1.6;
-      margin-bottom: 24px;
-      font-weight: 300;
-    }
-
-    /* Button Styling & Pulse Effect */
+    /* Action Button */
     .btn {
       background: linear-gradient(135deg, #ec4899, #8b5cf6);
       color: #fff;
       border: none;
-      padding: 16px 32px;
+      padding: 14px 28px;
       font-size: 1rem;
-      font-weight: 600;
+      font-weight: 700;
       border-radius: 50px;
       cursor: pointer;
       box-shadow: 0 10px 25px rgba(236, 72, 153, 0.4);
       transition: all 0.3s ease;
       outline: none;
-      animation: pulseBtn 2s infinite;
+      animation: pulseBtn 1.5s infinite;
+      margin-top: 10px;
     }
 
     @keyframes pulseBtn {
@@ -126,29 +192,23 @@
       100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(236, 72, 153, 0); }
     }
 
-    .btn:hover {
-      transform: translateY(-3px) scale(1.05);
-      box-shadow: 0 15px 30px rgba(236, 72, 153, 0.7);
-    }
-
-    /* Secret Message Reveal */
+    /* Hidden Wish Reveal */
     .secret-message {
       max-height: 0;
       opacity: 0;
       overflow: hidden;
       transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
       margin-top: 0;
-      padding: 0 10px;
       background: rgba(255, 255, 255, 0.05);
       border-radius: 16px;
     }
 
     .secret-message.show {
-      max-height: 300px;
+      max-height: 350px;
       opacity: 1;
-      margin-top: 24px;
+      margin-top: 20px;
       padding: 20px 15px;
-      border: 1px dashed rgba(244, 114, 182, 0.4);
+      border: 1px dashed rgba(244, 114, 182, 0.5);
     }
 
     .secret-message p {
@@ -159,44 +219,50 @@
 
     .secret-message .highlight {
       color: #f472b6;
-      font-weight: 600;
+      font-weight: 700;
+      font-size: 1.1rem;
     }
   </style>
 </head>
 <body>
 
-  <!-- Background Song (Auto-loaded, plays on user click) -->
+  <!-- Upbeat Birthday Music -->
   <audio id="bdayMusic" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8a73229.mp3?filename=happy-birthday-155461.mp3" preload="auto"></audio>
 
-  <!-- Floating Background Icons -->
+  <!-- Background Floating Particles -->
   <div id="hearts-container"></div>
 
-  <!-- Birthday Card -->
+  <!-- Main Birthday Card -->
   <div class="card">
-    <div class="subtitle">✨ Today is all about you ✨</div>
-    <h1 class="name-title">Happy Birthday Rakiba!</h1>
-    <p class="brief-wish">
-      To one of the most incredible people—may your year ahead be filled with endless joy and magic.
-    </p>
+    <div class="subtitle">💥 Uh oh! Tom & Jerry are fighting again... 💥</div>
+    
+    <!-- Tom and Jerry Animated Stage -->
+    <div class="tj-stage fighting" id="tjStage">
+      <div class="dust-cloud"></div>
+      <div class="character tom" title="Tom"></div>
+      <div class="character jerry" title="Jerry"></div>
+    </div>
 
-    <button class="btn" id="surpriseBtn" onclick="revealSurprise()">
-      🎉 Click For Your Surprise 🎵
+    <button class="btn" id="stopBtn" onclick="stopFightAndWish()">
+      🛑 Break Up The Fight! 🎁
     </button>
 
+    <!-- Hidden Birthday Section -->
     <div class="secret-message" id="secretMsg">
+      <h1 class="name-title">Happy Birthday Rakiba! 🎉</h1>
       <p>
-        <span class="highlight">Dear Rakiba,</span><br>
-        You bring so much light and positive energy into every room you enter. Wishing you all the success, happiness, and unforgettable moments in the world today and always! 🥂✨
+        <span class="highlight">Tom & Jerry stopped fighting just to wish you! 🐱🐭✨</span><br><br>
+        May your special day be filled with endless smiles, hilarious moments, and all the joy in the world. Keep spreading your amazing vibe wherever you go! 🥂💖
       </p>
     </div>
   </div>
 
   <script>
-    // Create animated floating elements in the background
+    // Create background floating hearts/stars
     const container = document.getElementById('hearts-container');
-    const heartSymbols = ['✨', '💖', '⭐', '🌸', '🎈'];
+    const heartSymbols = ['✨', '💖', '⭐', '🌸', '🎈', '🧀'];
     
-    for (let i = 0; i < 25; i++) {
+    for (let i = 0; i < 22; i++) {
       const heart = document.createElement('div');
       heart.className = 'bg-heart';
       heart.innerText = heartSymbols[Math.floor(Math.random() * heartSymbols.length)];
@@ -207,33 +273,39 @@
       container.appendChild(heart);
     }
 
-    // Reveal surprise, trigger audio, and launch continuous confetti
-    function revealSurprise() {
+    // Function to stop the fight, play music, and reveal the wish
+    function stopFightAndWish() {
+      const stage = document.getElementById('tjStage');
+      const btn = document.getElementById('stopBtn');
       const msg = document.getElementById('secretMsg');
-      const btn = document.getElementById('surpriseBtn');
       const music = document.getElementById('bdayMusic');
-      
-      // Play Audio
+
+      // 1. Play background song
       music.play();
 
-      msg.classList.add('show');
-      btn.style.display = 'none';
+      // 2. Stop fighting animation and switch to happy state
+      stage.classList.remove('fighting');
+      stage.classList.add('peaceful');
 
-      // Confetti Cannon Explosions
+      // 3. Hide button and reveal message
+      btn.style.display = 'none';
+      msg.classList.add('show');
+
+      // 4. Confetti explosion
       var duration = 3 * 1000;
       var end = Date.now() + duration;
 
       (function frame() {
         confetti({
-          particleCount: 5,
+          particleCount: 6,
           angle: 60,
-          spread: 55,
+          spread: 60,
           origin: { x: 0 }
         });
         confetti({
-          particleCount: 5,
+          particleCount: 6,
           angle: 120,
-          spread: 55,
+          spread: 60,
           origin: { x: 1 }
         });
 
