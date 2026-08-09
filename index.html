@@ -6,7 +6,7 @@
   <title>Happy Birthday Rakiba!</title>
 
   <!-- Google Fonts & Canvas Confetti Library -->
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Fredoka+One&family=Sacramento&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Fredoka+One&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
   <style>
@@ -27,7 +27,7 @@
       color: #fff;
     }
 
-    /* Floating Background Hearts/Stars */
+    /* Floating Background Elements */
     .bg-heart {
       position: absolute;
       color: rgba(236, 72, 153, 0.3);
@@ -93,7 +93,7 @@
       transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
 
-    /* Reliable Tom & Jerry Image Sources */
+    /* Tom & Jerry Images */
     .tom {
       background-image: url('https://i.imgur.com/8QZ7A0G.png'), url('https://cdn-icons-png.flaticon.com/512/616/616408.png');
       background-color: #4b5563;
@@ -152,7 +152,7 @@
       100% { transform: translateY(-12px) scale(1.05); }
     }
 
-    /* Titles & Subtitles */
+    /* Text & Titles */
     .subtitle {
       text-transform: uppercase;
       letter-spacing: 2px;
@@ -228,7 +228,7 @@
 </head>
 <body>
 
-  <!-- Upbeat Birthday Music -->
+  <!-- Backup Audio Element -->
   <audio id="bdayMusic" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8a73229.mp3?filename=happy-birthday-155461.mp3" preload="auto"></audio>
 
   <!-- Background Floating Particles -->
@@ -246,7 +246,7 @@
     </div>
 
     <button class="btn" id="stopBtn" onclick="stopFightAndWish()">
-      🛑 Break Up The Fight! 🎁
+      🛑 Break Up The Fight & Play Tune! 🎵
     </button>
 
     <!-- Hidden Birthday Section -->
@@ -260,7 +260,7 @@
   </div>
 
   <script>
-    // Create background floating hearts/stars
+    // Create background floating elements
     const container = document.getElementById('hearts-container');
     const heartSymbols = ['✨', '💖', '⭐', '🌸', '🎈', '🧀'];
     
@@ -275,6 +275,48 @@
       container.appendChild(heart);
     }
 
+    // Built-in Synthesizer for Birthday Song Melody & Rhythm
+    function playSynthesizedBirthdaySong() {
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      if (!AudioCtx) return;
+      const ctx = new AudioCtx();
+
+      // Note Frequencies in Hz
+      const notes = {
+        'C4': 261.63, 'D4': 293.66, 'E4': 329.63, 'F4': 349.23,
+        'G4': 392.00, 'A4': 440.00, 'Bb4': 466.16, 'C5': 523.25
+      };
+
+      // Tune Sequence: [Note, Beat Duration]
+      const song = [
+        ['C4', 0.3], ['C4', 0.3], ['D4', 0.6], ['C4', 0.6], ['F4', 0.6], ['E4', 1.2],
+        ['C4', 0.3], ['C4', 0.3], ['D4', 0.6], ['C4', 0.6], ['G4', 0.6], ['F4', 1.2],
+        ['C4', 0.3], ['C4', 0.3], ['C5', 0.6], ['A4', 0.6], ['F4', 0.6], ['E4', 0.6], ['D4', 0.8],
+        ['Bb4', 0.3], ['Bb4', 0.3], ['A4', 0.6], ['F4', 0.6], ['G4', 0.6], ['F4', 1.4]
+      ];
+
+      let startTime = ctx.currentTime + 0.1;
+
+      song.forEach(([note, duration]) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+
+        osc.type = 'triangle'; // Warm musical chime sound
+        osc.frequency.setValueAtTime(notes[note], startTime);
+
+        gain.gain.setValueAtTime(0.3, startTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, startTime + duration - 0.05);
+
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+
+        osc.start(startTime);
+        osc.stop(startTime + duration);
+
+        startTime += duration * 0.85; // Tempo rhythm spacing
+      });
+    }
+
     // Function to stop the fight, play music, and reveal the wish
     function stopFightAndWish() {
       const stage = document.getElementById('tjStage');
@@ -282,8 +324,9 @@
       const msg = document.getElementById('secretMsg');
       const music = document.getElementById('bdayMusic');
 
-      // 1. Play background song
-      music.play();
+      // 1. Play both HTML MP3 and Synthesized Birthday Melody
+      music.play().catch(() => {});
+      playSynthesizedBirthdaySong();
 
       // 2. Stop fighting animation and switch to happy state
       stage.classList.remove('fighting');
