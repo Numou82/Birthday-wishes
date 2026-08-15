@@ -3,228 +3,302 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Recipe Estimator & Costing Tool</title>
+  <title>Light Fields - Foodstuff Operations Portal</title>
   <style>
     :root {
-      --primary: #2e7d32;
-      --primary-light: #e8f5e9;
-      --border: #ccc;
-      --bg: #f4f6f8;
+      --sidebar-bg: #1e293b;
+      --sidebar-hover: #334155;
+      --primary: #0284c7;
+      --primary-dark: #0369a1;
+      --bg: #f1f5f9;
+      --card-bg: #ffffff;
+      --text: #0f172a;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --green: #10b981;
+      --orange: #f59e0b;
+      --purple: #8b5cf6;
+      --red: #ef4444;
     }
-    body {
-      font-family: Arial, sans-serif;
-      margin: 20px;
-      background-color: var(--bg);
-      color: #333;
-    }
-    h1, h2, h3 {
-      color: #1b5e20;
-      margin-top: 0;
-    }
-    .nav-tabs {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 20px;
-    }
-    .tab-btn {
-      padding: 10px 20px;
-      font-size: 16px;
-      border: 1px solid var(--border);
-      background-color: #fff;
-      cursor: pointer;
-      border-radius: 4px;
-    }
-    .tab-btn.active {
-      background-color: var(--primary);
-      color: #fff;
-      border-color: var(--primary);
-    }
-    .tab-content {
-      display: none;
-      background: #fff;
-      padding: 20px;
-      border-radius: 6px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    }
-    .tab-content.active {
-      display: block;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 10px;
-    }
-    th, td {
-      border: 1px solid var(--border);
-      padding: 8px;
-      text-align: left;
-    }
-    th {
-      background-color: var(--primary-light);
-    }
-    input, select {
-      padding: 6px;
-      width: 100%;
-      box-sizing: border-box;
-    }
-    .grid-layout {
-      display: grid;
-      grid-template-columns: 1fr 2fr;
-      gap: 20px;
-    }
-    .card {
-      border: 1px solid var(--border);
-      padding: 15px;
-      border-radius: 4px;
-      margin-bottom: 15px;
-      background: #fafafa;
-    }
-    .card-title {
-      font-weight: bold;
-      background: var(--primary-light);
-      padding: 5px;
-      margin: -15px -15px 15px -15px;
-      border-bottom: 1px solid var(--border);
-    }
-    .row {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 8px;
-      align-items: center;
-    }
-    .row label {
-      font-weight: bold;
-      font-size: 14px;
-    }
-    .row input {
-      width: 40%;
-      text-align: right;
-    }
-    .btn {
-      background-color: var(--primary);
-      color: white;
-      border: none;
-      padding: 8px 16px;
-      cursor: pointer;
-      border-radius: 4px;
-    }
-    .btn-danger {
-      background-color: #d32f2f;
+
+    * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    body { margin: 0; display: flex; height: 100vh; background-color: var(--bg); color: var(--text); overflow: hidden; }
+
+    /* SIDEBAR */
+    .sidebar { width: 250px; background-color: var(--sidebar-bg); color: #fff; display: flex; flex-direction: column; flex-shrink: 0; }
+    .brand { padding: 20px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid #334155; }
+    .avatar { width: 40px; height: 40px; background: #3b82f6; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 16px; }
+    .brand-text h2 { margin: 0; font-size: 16px; font-weight: 600; }
+    .brand-text p { margin: 0; font-size: 11px; color: #94a3b8; }
+    .nav { list-style: none; padding: 15px 0; margin: 0; flex-grow: 1; }
+    .nav-item { padding: 12px 20px; display: flex; align-items: center; gap: 10px; color: #cbd5e1; cursor: pointer; font-size: 14px; transition: 0.2s; }
+    .nav-item:hover, .nav-item.active { background-color: var(--sidebar-hover); color: #fff; border-left: 4px solid var(--primary); }
+
+    /* MAIN CONTAINER */
+    .main-content { flex-grow: 1; overflow-y: auto; padding: 25px; }
+    .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+    .header h1 { margin: 0; font-size: 24px; color: var(--text); }
+    .header-actions { display: flex; gap: 10px; align-items: center; }
+
+    /* HERO BANNER */
+    .hero-banner { background: linear-gradient(135deg, #1e3a8a, #0284c7); color: #fff; padding: 20px 25px; border-radius: 8px; margin-bottom: 20px; }
+    .hero-banner h2 { margin: 0 0 5px 0; font-size: 20px; }
+    .hero-banner p { margin: 0; font-size: 13px; opacity: 0.9; }
+
+    /* KPI CARDS */
+    .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 15px; margin-bottom: 25px; }
+    .kpi-card { background: var(--card-bg); padding: 15px; border-radius: 8px; border-left: 5px solid var(--primary); box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+    .kpi-card.kpi-green { border-left-color: var(--green); }
+    .kpi-card.kpi-orange { border-left-color: var(--orange); }
+    .kpi-card.kpi-purple { border-left-color: var(--purple); }
+    .kpi-card.kpi-red { border-left-color: var(--red); }
+    .kpi-title { font-size: 11px; text-transform: uppercase; color: var(--text-muted); font-weight: bold; margin-bottom: 5px; }
+    .kpi-value { font-size: 24px; font-weight: bold; }
+
+    /* UI ELEMENTS & TABLES */
+    .card { background: var(--card-bg); padding: 20px; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+    .card-title { font-size: 15px; font-weight: bold; margin-bottom: 15px; color: var(--text); border-bottom: 1px solid var(--border); padding-bottom: 8px; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    th, td { padding: 10px; border: 1px solid var(--border); text-align: left; }
+    th { background-color: #f8fafc; color: var(--text-muted); font-weight: 600; }
+    input, select { padding: 7px; border: 1px solid var(--border); border-radius: 4px; font-size: 13px; width: 100%; box-sizing: border-box; }
+    
+    .btn { background-color: var(--primary); color: white; border: none; padding: 8px 14px; border-radius: 4px; cursor: pointer; font-size: 13px; font-weight: 500; }
+    .btn:hover { background-color: var(--primary-dark); }
+    .btn-secondary { background-color: #64748b; }
+    .btn-secondary:hover { background-color: #475569; }
+    .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text); }
+    .btn-danger { background-color: var(--red); }
+    .badge { padding: 3px 8px; border-radius: 12px; font-size: 11px; font-weight: bold; }
+    .badge-saved { background: #d1fae5; color: #065f46; }
+    .badge-draft { background: #fef3c7; color: #92400e; }
+
+    /* SECTION TOGGLE */
+    .tab-section { display: none; }
+    .tab-section.active { display: block; }
+
+    /* PRINT LAYOUT ADJUSTMENTS */
+    @media print {
+      body { height: auto; overflow: visible; background: #fff; }
+      .sidebar, .header-actions, .btn, .no-print { display: none !important; }
+      .main-content { padding: 0; }
+      .card { border: none; box-shadow: none; padding: 0; }
     }
   </style>
 </head>
 <body>
 
-  <h1>Recipe Cost Estimation System</h1>
-
-  <div class="nav-tabs">
-    <button class="tab-btn active" onclick="switchTab('recipe-tab')">Recipe Estimator</button>
-    <button class="tab-btn" onclick="switchTab('master-tab')">Master Price List</button>
+  <!-- SIDEBAR NAVIGATION -->
+  <div class="sidebar">
+    <div class="brand">
+      <div class="avatar">LF</div>
+      <div class="brand-text">
+        <h2>Light Fields</h2>
+        <p>Foodstuff Operations Portal</p>
+      </div>
+    </div>
+    <ul class="nav">
+      <li class="nav-item active" onclick="showTab('dashboard')">📊 Executive Dashboard</li>
+      <li class="nav-item" onclick="showTab('saved-recipes')">📖 Saved Recipes</li>
+      <li class="nav-item" onclick="showTab('new-recipe')">➕ Recipe Estimator</li>
+      <li class="nav-item" onclick="showTab('master-list')">📋 Master Price List</li>
+    </ul>
   </div>
 
-  <!-- MASTER INGREDIENTS LIST TAB -->
-  <div id="master-tab" class="tab-content">
-    <h2>Master Price List</h2>
-    <p>Manage your ingredients and unit costs here.</p>
+  <!-- MAIN CONTENT AREA -->
+  <div class="main-content">
     
-    <div style="display: flex; gap: 10px; margin-bottom: 15px;">
-      <input type="text" id="m-code" placeholder="Code (e.g. 15)">
-      <input type="text" id="m-name" placeholder="Ingredient Name">
-      <input type="text" id="m-uom" placeholder="UOM (e.g. Gram, ML)">
-      <input type="number" id="m-cost" step="0.001" placeholder="Unit Cost">
-      <button class="btn" onclick="addMasterItem()">Add / Update Item</button>
-    </div>
-
-    <table id="master-table">
-      <thead>
-        <tr>
-          <th>Code</th>
-          <th>Ingredient Name</th>
-          <th>UOM</th>
-          <th>Unit Cost</th>
-          <th>Action</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
-  </div>
-
-  <!-- RECIPE ESTIMATOR TAB -->
-  <div id="recipe-tab" class="tab-content active">
-    
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-      <div>
-        <label><b>Date:</b> </label>
-        <input type="date" id="rec-date" style="width: auto;">
-      </div>
-      <div>
-        <label><b>Dish Code (Auto):</b> </label>
-        <input type="text" id="rec-code" readonly style="width: 100px; font-weight: bold; background: #eee;">
-      </div>
-      <div>
-        <button class="btn" onclick="createNewRecipe()">+ New Recipe</button>
-      </div>
-    </div>
-
-    <div class="card" style="background: #ffe0b2;">
-      <div style="display: flex; align-items: center; gap: 10px;">
-        <label style="font-weight: bold; font-size: 18px;">Dish Name:</label>
-        <input type="text" id="rec-name" placeholder="Enter Dish Name (e.g. Chicken 65 Biryani)" style="font-size: 16px;">
-      </div>
-    </div>
-
-    <div class="grid-layout">
-      <!-- LEFT COLUMN: STATS & CALCULATIONS -->
-      <div>
-        <div class="card">
-          <div class="card-title">Cost per Person</div>
-          <div class="row"><label>Sub total Cost:</label><input type="text" id="c-subtotal" readonly></div>
-          <div class="row"><label>Serving Per Person:</label><input type="number" id="c-servings" value="12" oninput="calculate()"></div>
-          <div class="row"><label>Cost Per Person:</label><input type="text" id="c-costperperson" readonly></div>
-        </div>
-
-        <div class="card">
-          <div class="card-title">Selling Price %</div>
-          <div class="row"><label>Cost Per Person:</label><input type="text" id="sp-costperperson" readonly></div>
-          <div class="row"><label>Profit Margin %:</label><input type="number" id="sp-margin" value="15" oninput="calculate()"></div>
-          <div class="row"><label>Selling Price:</label><input type="text" id="sp-sellingprice" readonly></div>
-        </div>
-
-        <div class="card">
-          <div class="card-title">Calculation Description</div>
-          <div class="row"><label>Sub total Recipe Cost:</label><input type="text" id="cd-subtotal" readonly></div>
-          <div class="row"><label>Profit Included %:</label><input type="text" id="cd-margin" readonly></div>
-          <div class="row"><label>Per Person Profit:</label><input type="text" id="cd-profitperperson" readonly></div>
-          <div class="row"><label>Profit Amount:</label><input type="text" id="cd-profitamount" readonly></div>
-        </div>
-
-        <div class="card">
-          <div class="card-title">Other Calculation</div>
-          <div class="row"><label>Total Recipe Cost:</label><input type="text" id="oc-recipe-cost" readonly></div>
-          <div class="row"><label>Labor Cost:</label><input type="number" id="oc-labor" value="0.300" step="0.01" oninput="calculate()"></div>
-          <div class="row"><label>Other Cost:</label><input type="number" id="oc-other" value="0.200" step="0.01" oninput="calculate()"></div>
-          <div class="row"><label>Total Sub Cost:</label><input type="text" id="oc-totalsub" readonly></div>
+    <!-- EXECUTIVE DASHBOARD -->
+    <div id="dashboard" class="tab-section active">
+      <div class="header">
+        <h1>Executive Dashboard</h1>
+        <div class="header-actions">
+          <button class="btn btn-outline" onclick="showTab('master-list')">📋 Master List (<span id="master-count-badge">0</span> items)</button>
+          <button class="btn" onclick="showTab('new-recipe')">+ Create Recipe</button>
         </div>
       </div>
 
-      <!-- RIGHT COLUMN: INGREDIENTS TABLE -->
-      <div>
-        <h3>Recipe Ingredients</h3>
-        <button class="btn" onclick="addIngredientRow()">+ Add Ingredient Row</button>
-        <table id="ingredients-table">
+      <div class="hero-banner">
+        <h2>Operations Command Center</h2>
+        <p>Monitor recipe margins, ingredient coverage, and pricing performance from one unified portal.</p>
+      </div>
+
+      <!-- RECIPE REQUIREMENT KPI CARDS -->
+      <div class="kpi-grid">
+        <div class="kpi-card kpi-purple">
+          <div class="kpi-title">Total Recipes</div>
+          <div class="kpi-value" id="kpi-total-recipes">0</div>
+        </div>
+        <div class="kpi-card kpi-green">
+          <div class="kpi-title">Saved Recipes</div>
+          <div class="kpi-value" id="kpi-saved-recipes">0</div>
+        </div>
+        <div class="kpi-card kpi-orange">
+          <div class="kpi-title">Draft Recipes</div>
+          <div class="kpi-value" id="kpi-draft-recipes">0</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-title">Master Items</div>
+          <div class="kpi-value" id="kpi-master-items">0</div>
+        </div>
+        <div class="kpi-card kpi-green">
+          <div class="kpi-title">Avg Profit Margin</div>
+          <div class="kpi-value" id="kpi-avg-margin">0%</div>
+        </div>
+      </div>
+
+      <!-- RECIPES SUMMARY TABLE -->
+      <div class="card">
+        <div class="card-title">Recent Recipe Activity</div>
+        <table>
           <thead>
             <tr>
-              <th style="width: 15%;">Code</th>
-              <th>Ingredients</th>
-              <th style="width: 12%;">Qty</th>
-              <th style="width: 12%;">Uom</th>
-              <th style="width: 12%;">Unit Cost</th>
-              <th style="width: 12%;">Per Person</th>
-              <th style="width: 12%;">Total Cost</th>
-              <th style="width: 5%;"></th>
+              <th>Dish Code</th>
+              <th>Dish Name</th>
+              <th>Date</th>
+              <th>Status</th>
+              <th>Per Person Cost</th>
+              <th>Selling Price</th>
+              <th>Action</th>
             </tr>
           </thead>
-          <tbody id="recipe-ingredients-body"></tbody>
+          <tbody id="dashboard-recent-table"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- SAVED RECIPES TAB -->
+    <div id="saved-recipes" class="tab-section">
+      <div class="header">
+        <h1>Saved & Draft Recipes</h1>
+        <button class="btn" onclick="showTab('new-recipe')">+ New Recipe</button>
+      </div>
+
+      <div class="card">
+        <table>
+          <thead>
+            <tr>
+              <th>Code</th>
+              <th>Dish Name</th>
+              <th>Date</th>
+              <th>Status</th>
+              <th>Total Cost</th>
+              <th>Selling Price</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="saved-recipes-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- NEW / EDIT RECIPE TAB -->
+    <div id="new-recipe" class="tab-section">
+      <div class="header">
+        <h1>Recipe Estimator</h1>
+        <div class="header-actions">
+          <button class="btn btn-secondary" onclick="saveRecipe('Draft')">💾 Save as Draft</button>
+          <button class="btn" onclick="saveRecipe('Saved')">✅ Save Recipe</button>
+          <button class="btn btn-outline" onclick="window.print()">🖨️ Print / Save PDF</button>
+        </div>
+      </div>
+
+      <div class="card" style="background: #f8fafc;">
+        <div style="display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 15px;">
+          <div>
+            <label><b>Dish Name:</b></label>
+            <input type="text" id="rec-name" placeholder="Enter Dish Name (e.g. Chicken 65 Biryani)">
+          </div>
+          <div>
+            <label><b>Dish Code (Auto):</b></label>
+            <input type="text" id="rec-code" readonly style="background: #e2e8f0; font-weight: bold;">
+          </div>
+          <div>
+            <label><b>Date:</b></label>
+            <input type="date" id="rec-date">
+          </div>
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 20px;">
+        <!-- LEFT COLUMN: COSTING & MARGINS -->
+        <div>
+          <div class="card">
+            <div class="card-title">Cost per Person</div>
+            <div style="display:flex; justify-content:space-between; margin-bottom:8px;"><label>Sub total Cost:</label><input type="text" id="c-subtotal" readonly style="width:40%;"></div>
+            <div style="display:flex; justify-content:space-between; margin-bottom:8px;"><label>Serving Per Person:</label><input type="number" id="c-servings" value="12" oninput="calculate()" style="width:40%;"></div>
+            <div style="display:flex; justify-content:space-between;"><label>Cost Per Person:</label><input type="text" id="c-costperperson" readonly style="width:40%;"></div>
+          </div>
+
+          <div class="card">
+            <div class="card-title">Selling Price %</div>
+            <div style="display:flex; justify-content:space-between; margin-bottom:8px;"><label>Cost Per Person:</label><input type="text" id="sp-costperperson" readonly style="width:40%;"></div>
+            <div style="display:flex; justify-content:space-between; margin-bottom:8px;"><label>Profit Margin %:</label><input type="number" id="sp-margin" value="15" oninput="calculate()" style="width:40%;"></div>
+            <div style="display:flex; justify-content:space-between;"><label>Selling Price:</label><input type="text" id="sp-sellingprice" readonly style="width:40%;"></div>
+          </div>
+
+          <div class="card">
+            <div class="card-title">Other Calculation</div>
+            <div style="display:flex; justify-content:space-between; margin-bottom:8px;"><label>Total Recipe Cost:</label><input type="text" id="oc-recipe-cost" readonly style="width:40%;"></div>
+            <div style="display:flex; justify-content:space-between; margin-bottom:8px;"><label>Labor Cost:</label><input type="number" id="oc-labor" value="0.300" step="0.01" oninput="calculate()" style="width:40%;"></div>
+            <div style="display:flex; justify-content:space-between; margin-bottom:8px;"><label>Other Cost:</label><input type="number" id="oc-other" value="0.200" step="0.01" oninput="calculate()" style="width:40%;"></div>
+            <div style="display:flex; justify-content:space-between;"><label>Total Sub Cost:</label><input type="text" id="oc-totalsub" readonly style="width:40%;"></div>
+          </div>
+        </div>
+
+        <!-- RIGHT COLUMN: INGREDIENTS -->
+        <div class="card">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+            <div class="card-title" style="margin:0; border:none;">Recipe Ingredients</div>
+            <button class="btn no-print" onclick="addIngredientRow()">+ Add Ingredient</button>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th style="width: 15%;">Code</th>
+                <th>Ingredients</th>
+                <th style="width: 12%;">Qty</th>
+                <th style="width: 12%;">UOM</th>
+                <th style="width: 15%;">Unit Cost</th>
+                <th style="width: 15%;">Total Cost</th>
+                <th class="no-print" style="width: 5%;"></th>
+              </tr>
+            </thead>
+            <tbody id="recipe-ingredients-body"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- MASTER PRICE LIST TAB -->
+    <div id="master-list" class="tab-section">
+      <div class="header">
+        <h1>Master Price List</h1>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Add / Update Master Item</div>
+        <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+          <input type="text" id="m-code" placeholder="Code (e.g. 15)">
+          <input type="text" id="m-name" placeholder="Ingredient Name">
+          <input type="text" id="m-uom" placeholder="UOM (Gram, ML, etc)">
+          <input type="number" id="m-cost" step="0.001" placeholder="Unit Cost">
+          <button class="btn" onclick="addMasterItem()">Add Item</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <table>
+          <thead>
+            <tr>
+              <th>Code</th>
+              <th>Ingredient Name</th>
+              <th>UOM</th>
+              <th>Unit Cost</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="master-table-body"></tbody>
         </table>
       </div>
     </div>
@@ -232,40 +306,48 @@
   </div>
 
   <script>
-    // Initial Master List
-    let masterList = [
+    // LOCAL STORAGE KEYS
+    const MASTER_KEY = 'lf_master_list';
+    const RECIPES_KEY = 'lf_recipes_list';
+
+    // INITIAL DEFAULT MASTER DATA
+    let masterList = JSON.parse(localStorage.getItem(MASTER_KEY)) || [
       { code: "15", name: "Basmati Rice", uom: "Gram", cost: 0.002 },
       { code: "16", name: "Chicken", uom: "Gram", cost: 0.003 },
       { code: "17", name: "Onion", uom: "Gram", cost: 0.005 },
       { code: "18", name: "Yogurt", uom: "Gram", cost: 0.006 },
       { code: "19", name: "Oil", uom: "ML", cost: 0.003 },
-      { code: "20", name: "Salt", uom: "Gram", cost: 0.001 },
-      { code: "21", name: "Turmeric", uom: "Gram", cost: 0.020 },
-      { code: "22", name: "Red Chili Powder", uom: "Gram", cost: 0.015 },
-      { code: "23", name: "Coriander Powder", uom: "Gram", cost: 0.012 },
-      { code: "24", name: "Cumin Seeds", uom: "Gram", cost: 0.018 },
-      { code: "25", name: "Garam Masala", uom: "Gram", cost: 0.025 },
-      { code: "26", name: "Cinnamon", uom: "Gram", cost: 0.030 },
-      { code: "28", name: "Cloves", uom: "Gram", cost: 0.040 },
-      { code: "30", name: "Bay Leaf", uom: "Leaf", cost: 0.010 },
-      { code: "31", name: "Cardamom", uom: "Gram", cost: 0.050 },
-      { code: "56", name: "Ginger Garlic Paste", uom: "Gram", cost: 0.010 }
+      { code: "20", name: "Salt", uom: "Gram", cost: 0.001 }
     ];
 
-    // Load from LocalStorage if available
-    if(localStorage.getItem('masterList')) {
-      masterList = JSON.parse(localStorage.getItem('masterList'));
+    let recipes = JSON.parse(localStorage.getItem(RECIPES_KEY)) || [];
+
+    function init() {
+      renderMasterTable();
+      renderSavedRecipes();
+      updateDashboardKPIs();
+      resetRecipeForm();
     }
 
-    function switchTab(tabId) {
-      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-      document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+    function showTab(tabId) {
+      document.querySelectorAll('.tab-section').forEach(s => s.classList.remove('active'));
+      document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+      
       document.getElementById(tabId).classList.add('active');
-      event.target.classList.add('active');
+      
+      // Update sidebar visual indicator
+      const navItems = document.querySelectorAll('.nav-item');
+      if (tabId === 'dashboard') navItems[0].classList.add('active');
+      if (tabId === 'saved-recipes') navItems[1].classList.add('active');
+      if (tabId === 'new-recipe') navItems[2].classList.add('active');
+      if (tabId === 'master-list') navItems[3].classList.add('active');
+
+      if (tabId === 'dashboard') updateDashboardKPIs();
     }
 
+    // MASTER LIST LOGIC
     function renderMasterTable() {
-      const tbody = document.querySelector('#master-table tbody');
+      const tbody = document.getElementById('master-table-body');
       tbody.innerHTML = '';
       masterList.forEach((item, index) => {
         tbody.innerHTML += `
@@ -273,12 +355,13 @@
             <td>${item.code}</td>
             <td>${item.name}</td>
             <td>${item.uom}</td>
-            <td>${item.cost.toFixed(3)}</td>
-            <td><button class="btn btn-danger" onclick="deleteMasterItem(${index})">X</button></td>
+            <td>${parseFloat(item.cost).toFixed(3)}</td>
+            <td><button class="btn btn-danger" onclick="deleteMasterItem(${index})">Delete</button></td>
           </tr>
         `;
       });
-      localStorage.setItem('masterList', JSON.stringify(masterList));
+      document.getElementById('master-count-badge').innerText = masterList.length;
+      localStorage.setItem(MASTER_KEY, JSON.stringify(masterList));
     }
 
     function addMasterItem() {
@@ -287,17 +370,11 @@
       const uom = document.getElementById('m-uom').value;
       const cost = parseFloat(document.getElementById('m-cost').value);
 
-      if(!code || !name || isNaN(cost)) {
-        alert("Please fill all required master item fields correctly.");
-        return;
-      }
+      if(!code || !name || isNaN(cost)) return alert('Please enter valid item details');
 
       const existingIndex = masterList.findIndex(i => i.code === code);
-      if(existingIndex > -1) {
-        masterList[existingIndex] = { code, name, uom, cost };
-      } else {
-        masterList.push({ code, name, uom, cost });
-      }
+      if(existingIndex > -1) masterList[existingIndex] = { code, name, uom, cost };
+      else masterList.push({ code, name, uom, cost });
 
       renderMasterTable();
       document.getElementById('m-code').value = '';
@@ -311,56 +388,46 @@
       renderMasterTable();
     }
 
-    function generateDishCode() {
-      return Math.floor(10000 + Math.random() * 90000);
-    }
-
-    function createNewRecipe() {
-      document.getElementById('rec-code').value = generateDishCode();
+    // RECIPE FORM LOGIC
+    function resetRecipeForm() {
+      document.getElementById('rec-code').value = Math.floor(10000 + Math.random() * 90000);
       document.getElementById('rec-date').valueAsDate = new Date();
       document.getElementById('rec-name').value = '';
       document.getElementById('recipe-ingredients-body').innerHTML = '';
-      // Populate default items like image
-      masterList.forEach(item => {
-        addIngredientRow(item.code, 0.1);
-      });
+      addIngredientRow();
       calculate();
     }
 
-    function addIngredientRow(selectedCode = "", defaultQty = 0) {
+    function addIngredientRow(code = '', qty = 0) {
       const tbody = document.getElementById('recipe-ingredients-body');
       const tr = document.createElement('tr');
 
-      let optionsHTML = `<option value="">Select Ingredient</option>`;
-      masterList.forEach(item => {
-        optionsHTML += `<option value="${item.code}" ${item.code == selectedCode ? 'selected' : ''}>${item.name} (${item.code})</option>`;
+      let options = `<option value="">Select Item</option>`;
+      masterList.forEach(m => {
+        options += `<option value="${m.code}" ${m.code == code ? 'selected' : ''}>${m.name} (${m.code})</option>`;
       });
 
       tr.innerHTML = `
-        <td><input type="text" class="r-code" readonly></td>
-        <td><select class="r-select" onchange="onIngredientSelect(this)">${optionsHTML}</select></td>
-        <td><input type="number" class="r-qty" value="${defaultQty}" step="0.01" oninput="calculate()"></td>
-        <td><input type="text" class="r-uom" readonly></td>
-        <td><input type="text" class="r-unitcost" readonly></td>
-        <td><input type="text" class="r-perperson" readonly></td>
-        <td><input type="text" class="r-totalcost" readonly></td>
-        <td><button class="btn btn-danger" onclick="this.closest('tr').remove(); calculate();">X</button></td>
+        <td><input type="text" class="r-code" readonly style="background:#f1f5f9;"></td>
+        <td><select class="r-select" onchange="onSelectIngredient(this)">${options}</select></td>
+        <td><input type="number" class="r-qty" value="${qty}" step="0.01" oninput="calculate()"></td>
+        <td><input type="text" class="r-uom" readonly style="background:#f1f5f9;"></td>
+        <td><input type="text" class="r-unitcost" readonly style="background:#f1f5f9;"></td>
+        <td><input type="text" class="r-totalcost" readonly style="background:#f1f5f9;"></td>
+        <td class="no-print"><button class="btn btn-danger" onclick="this.closest('tr').remove(); calculate();">X</button></td>
       `;
-
       tbody.appendChild(tr);
-      if(selectedCode) {
-        onIngredientSelect(tr.querySelector('.r-select'));
-      }
+      if(code) onSelectIngredient(tr.querySelector('.r-select'));
     }
 
-    function onIngredientSelect(selectEl) {
+    function onSelectIngredient(selectEl) {
       const tr = selectEl.closest('tr');
       const item = masterList.find(i => i.code === selectEl.value);
 
       if(item) {
         tr.querySelector('.r-code').value = item.code;
         tr.querySelector('.r-uom').value = item.uom;
-        tr.querySelector('.r-unitcost').value = item.cost.toFixed(3);
+        tr.querySelector('.r-unitcost').value = parseFloat(item.cost).toFixed(3);
       } else {
         tr.querySelector('.r-code').value = '';
         tr.querySelector('.r-uom').value = '';
@@ -377,49 +444,158 @@
       rows.forEach(tr => {
         const qty = parseFloat(tr.querySelector('.r-qty').value) || 0;
         const unitCost = parseFloat(tr.querySelector('.r-unitcost').value) || 0;
+        const lineTotal = qty * unitCost;
 
-        const totalCost = qty * unitCost; // Note: Total cost formula based on unit/qty setup
-        const perPerson = servings > 0 ? (qty * servings * 100) / servings : 0; // standard yield math display
-
-        tr.querySelector('.r-totalcost').value = totalCost.toFixed(3);
-        tr.querySelector('.r-perperson').value = (qty * 12).toFixed(3); // Match sheet scaling factor
-
-        totalRecipeCost += totalCost;
+        tr.querySelector('.r-totalcost').value = lineTotal.toFixed(3);
+        totalRecipeCost += lineTotal;
       });
 
-      // Left Section Updates
       const costPerPerson = totalRecipeCost / servings;
       const margin = parseFloat(document.getElementById('sp-margin').value) || 0;
       const profitPerPerson = costPerPerson * (margin / 100);
       const sellingPrice = costPerPerson + profitPerPerson;
-      const profitAmount = totalRecipeCost * (margin / 100);
 
-      const laborCost = parseFloat(document.getElementById('oc-labor').value) || 0;
-      const otherCost = parseFloat(document.getElementById('oc-other').value) || 0;
-      const totalSubCost = totalRecipeCost + laborCost + otherCost;
+      const labor = parseFloat(document.getElementById('oc-labor').value) || 0;
+      const other = parseFloat(document.getElementById('oc-other').value) || 0;
+      const totalSubCost = totalRecipeCost + labor + other;
 
-      // Cost per Person Card
       document.getElementById('c-subtotal').value = totalRecipeCost.toFixed(3);
       document.getElementById('c-costperperson').value = costPerPerson.toFixed(3);
 
-      // Selling Price Card
       document.getElementById('sp-costperperson').value = costPerPerson.toFixed(3);
       document.getElementById('sp-sellingprice').value = sellingPrice.toFixed(3);
 
-      // Calculation Description Card
-      document.getElementById('cd-subtotal').value = totalRecipeCost.toFixed(3);
-      document.getElementById('cd-margin').value = margin.toFixed(2) + '%';
-      document.getElementById('cd-profitperperson').value = profitPerPerson.toFixed(3);
-      document.getElementById('cd-profitamount').value = profitAmount.toFixed(3);
-
-      // Other Calculation Card
       document.getElementById('oc-recipe-cost').value = totalRecipeCost.toFixed(3);
       document.getElementById('oc-totalsub').value = totalSubCost.toFixed(3);
     }
 
-    // Init
-    renderMasterTable();
-    createNewRecipe();
+    // SAVE & DRAFT MANAGEMENT
+    function saveRecipe(status) {
+      const name = document.getElementById('rec-name').value;
+      if(!name) return alert('Please enter a Dish Name before saving.');
+
+      const code = document.getElementById('rec-code').value;
+      const date = document.getElementById('rec-date').value;
+
+      // Collect items
+      const items = [];
+      document.querySelectorAll('#recipe-ingredients-body tr').forEach(tr => {
+        const itemCode = tr.querySelector('.r-code').value;
+        const qty = parseFloat(tr.querySelector('.r-qty').value) || 0;
+        if(itemCode) items.push({ code: itemCode, qty });
+      });
+
+      const recipeObj = {
+        code,
+        name,
+        date,
+        status,
+        servings: document.getElementById('c-servings').value,
+        margin: document.getElementById('sp-margin').value,
+        labor: document.getElementById('oc-labor').value,
+        other: document.getElementById('oc-other').value,
+        totalCost: document.getElementById('c-subtotal').value,
+        costPerPerson: document.getElementById('c-costperperson').value,
+        sellingPrice: document.getElementById('sp-sellingprice').value,
+        items
+      };
+
+      const existingIndex = recipes.findIndex(r => r.code === code);
+      if(existingIndex > -1) recipes[existingIndex] = recipeObj;
+      else recipes.push(recipeObj);
+
+      localStorage.setItem(RECIPES_KEY, JSON.stringify(recipes));
+      alert(`Recipe successfully saved as ${status}!`);
+      
+      renderSavedRecipes();
+      updateDashboardKPIs();
+      showTab('saved-recipes');
+    }
+
+    function renderSavedRecipes() {
+      const tbody = document.getElementById('saved-recipes-tbody');
+      tbody.innerHTML = '';
+
+      recipes.forEach((r, idx) => {
+        const badgeClass = r.status === 'Saved' ? 'badge-saved' : 'badge-draft';
+        tbody.innerHTML += `
+          <tr>
+            <td><b>${r.code}</b></td>
+            <td>${r.name}</td>
+            <td>${r.date}</td>
+            <td><span class="badge ${badgeClass}">${r.status}</span></td>
+            <td>$${r.totalCost}</td>
+            <td>$${r.sellingPrice}</td>
+            <td>
+              <button class="btn" onclick="loadRecipeForEdit(${idx})">Edit</button>
+              <button class="btn btn-danger" onclick="deleteRecipe(${idx})">X</button>
+            </td>
+          </tr>
+        `;
+      });
+    }
+
+    function loadRecipeForEdit(index) {
+      const r = recipes[index];
+      document.getElementById('rec-code').value = r.code;
+      document.getElementById('rec-name').value = r.name;
+      document.getElementById('rec-date').value = r.date;
+      document.getElementById('c-servings').value = r.servings;
+      document.getElementById('sp-margin').value = r.margin;
+      document.getElementById('oc-labor').value = r.labor;
+      document.getElementById('oc-other').value = r.other;
+
+      document.getElementById('recipe-ingredients-body').innerHTML = '';
+      r.items.forEach(i => addIngredientRow(i.code, i.qty));
+      
+      calculate();
+      showTab('new-recipe');
+    }
+
+    function deleteRecipe(index) {
+      recipes.splice(index, 1);
+      localStorage.setItem(RECIPES_KEY, JSON.stringify(recipes));
+      renderSavedRecipes();
+      updateDashboardKPIs();
+    }
+
+    // DASHBOARD KPI & RECENT ACTIVITY
+    function updateDashboardKPIs() {
+      const total = recipes.length;
+      const savedCount = recipes.filter(r => r.status === 'Saved').length;
+      const draftCount = recipes.filter(r => r.status === 'Draft').length;
+
+      let sumMargin = 0;
+      recipes.forEach(r => sumMargin += parseFloat(r.margin || 0));
+      const avgMargin = total > 0 ? (sumMargin / total).toFixed(1) : 0;
+
+      document.getElementById('kpi-total-recipes').innerText = total;
+      document.getElementById('kpi-saved-recipes').innerText = savedCount;
+      document.getElementById('kpi-draft-recipes').innerText = draftCount;
+      document.getElementById('kpi-master-items').innerText = masterList.length;
+      document.getElementById('kpi-avg-margin').innerText = avgMargin + '%';
+
+      // Render recent activity table on dashboard
+      const tbody = document.getElementById('dashboard-recent-table');
+      tbody.innerHTML = '';
+      recipes.slice(-5).reverse().forEach((r) => {
+        const badgeClass = r.status === 'Saved' ? 'badge-saved' : 'badge-draft';
+        tbody.innerHTML += `
+          <tr>
+            <td><b>${r.code}</b></td>
+            <td>${r.name}</td>
+            <td>${r.date}</td>
+            <td><span class="badge ${badgeClass}">${r.status}</span></td>
+            <td>$${r.costPerPerson}</td>
+            <td>$${r.sellingPrice}</td>
+            <td><button class="btn btn-outline" onclick="showTab('saved-recipes')">View</button></td>
+          </tr>
+        `;
+      });
+    }
+
+    // Run Initialization
+    init();
   </script>
 </body>
 </html>
