@@ -1,503 +1,425 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Happy Birthday Rakiba!</title>
-
-  <!-- Google Fonts & Canvas Confetti Library -->
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Recipe Estimator & Costing Tool</title>
   <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
+    :root {
+      --primary: #2e7d32;
+      --primary-light: #e8f5e9;
+      --border: #ccc;
+      --bg: #f4f6f8;
     }
-
     body {
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background: linear-gradient(135deg, #090d16, #1a0b2e, #0f172a);
-      font-family: 'Outfit', sans-serif;
-      overflow-x: hidden;
-      color: #fff;
-      transition: background 1.5s ease-in-out;
-      position: relative;
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      background-color: var(--bg);
+      color: #333;
     }
-
-    /* Party Background Mode */
-    body.party-mode {
-      background: linear-gradient(135deg, #2e1065, #701a75, #831843, #1e1b4b);
-      background-size: 300% 300%;
-      animation: gradientShift 6s ease infinite;
-    }
-
-    @keyframes gradientShift {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
-
-    /* Background Floating Particles */
-    .bg-particle {
-      position: absolute;
-      color: rgba(255, 255, 255, 0.25);
-      animation: floatUp 8s linear infinite;
-      user-select: none;
-      z-index: 1;
-    }
-
-    @keyframes floatUp {
-      0% { transform: translateY(100vh) scale(0.5) rotate(0deg); opacity: 0; }
-      50% { opacity: 0.8; }
-      100% { transform: translateY(-10vh) scale(1.2) rotate(360deg); opacity: 0; }
-    }
-
-    /* Main Container Card */
-    .card {
-      position: relative;
-      z-index: 10;
-      background: rgba(255, 255, 255, 0.05);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border: 2px solid rgba(255, 255, 255, 0.15);
-      border-radius: 32px;
-      padding: 35px 25px;
-      width: 90%;
-      max-width: 480px;
-      text-align: center;
-      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6);
-      transition: all 0.8s ease;
-    }
-
-    body.party-mode .card {
-      background: rgba(255, 255, 255, 0.12);
-      border-color: rgba(251, 191, 36, 0.6);
-      box-shadow: 0 0 50px rgba(236, 72, 153, 0.5);
-    }
-
-    /* Headline Badges */
-    .badge {
-      display: inline-block;
-      padding: 6px 16px;
-      background: rgba(236, 72, 153, 0.2);
-      border: 1px solid #ec4899;
-      border-radius: 50px;
-      font-size: 0.8rem;
-      font-weight: 600;
-      letter-spacing: 2px;
-      color: #f472b6;
-      text-transform: uppercase;
-      margin-bottom: 12px;
-    }
-
-    /* Tom and Jerry Brawl Arena */
-    .arena {
-      position: relative;
-      height: 180px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      margin: 10px 0;
-    }
-
-    /* Dust Cloud */
-    .dust-cloud {
-      position: absolute;
-      width: 170px;
-      height: 120px;
-      background: rgba(255, 255, 255, 0.2);
-      border-radius: 50%;
-      filter: blur(10px);
-      animation: fightShake 0.12s infinite alternate;
-    }
-
-    .character-box {
-      width: 120px;
-      height: 120px;
-      position: absolute;
-      transition: all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
-    }
-
-    .tom-box { left: 10%; }
-    .jerry-box { right: 10%; }
-
-    /* VS Badge */
-    .vs-tag {
-      position: absolute;
-      font-family: 'Fredoka One', cursive;
-      font-size: 1.8rem;
-      color: #ef4444;
-      background: #fef08a;
-      padding: 4px 12px;
-      border-radius: 12px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.5);
-      z-index: 5;
-      animation: vsPulse 0.4s infinite alternate;
-    }
-
-    @keyframes vsPulse {
-      from { transform: scale(0.9) rotate(-5deg); }
-      to { transform: scale(1.1) rotate(5deg); }
-    }
-
-    /* Fighting Animations */
-    .fighting .tom-box { animation: brawlTom 0.2s infinite alternate; z-index: 3; }
-    .fighting .jerry-box { animation: brawlJerry 0.2s infinite alternate; z-index: 4; }
-
-    @keyframes brawlTom {
-      0% { transform: translateX(30px) rotate(-20deg) scale(1.1); }
-      100% { transform: translateX(60px) rotate(20deg) scale(0.85); }
-    }
-
-    @keyframes brawlJerry {
-      0% { transform: translateX(-30px) rotate(20deg) scale(0.85); }
-      100% { transform: translateX(-60px) rotate(-20deg) scale(1.1); }
-    }
-
-    @keyframes fightShake {
-      0% { transform: scale(1) rotate(-8deg); }
-      100% { transform: scale(1.25) rotate(8deg); }
-    }
-
-    /* Party Mode State for Tom & Jerry */
-    .peaceful .dust-cloud, .peaceful .vs-tag { display: none; }
-
-    .peaceful .tom-box {
-      transform: translateX(-30px) scale(1.1);
-      animation: happyDance 0.8s infinite alternate;
-    }
-
-    .peaceful .jerry-box {
-      transform: translateX(30px) scale(1.1);
-      animation: happyDance 0.8s infinite alternate 0.4s;
-    }
-
-    @keyframes happyDance {
-      0% { transform: translateY(0) scale(1.05); }
-      100% { transform: translateY(-16px) scale(1.15); }
-    }
-
-    /* Cartoon Squad That Appears During Party */
-    .cartoon-squad {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      top: 0;
-      left: 0;
-      pointer-events: none;
-      z-index: 8;
-      opacity: 0;
-      transition: opacity 1s ease;
-    }
-
-    body.party-mode .cartoon-squad {
-      opacity: 1;
-    }
-
-    .squad-member {
-      position: absolute;
-      width: 90px;
-      height: 90px;
-      animation: squadBounce 1s infinite alternate ease-in-out;
-    }
-
-    .mickey { top: -45px; left: -30px; animation-delay: 0.1s; }
-    .spongebob { top: -45px; right: -30px; animation-delay: 0.3s; }
-    .pikachu { bottom: -30px; left: -25px; animation-delay: 0.5s; }
-
-    @keyframes squadBounce {
-      0% { transform: translateY(0) rotate(-5deg); }
-      100% { transform: translateY(-15px) rotate(5deg); }
-    }
-
-    /* Button */
-    .btn {
-      background: linear-gradient(135deg, #f43f5e, #8b5cf6, #d946ef);
-      background-size: 200% 200%;
-      color: #fff;
-      border: none;
-      padding: 16px 36px;
-      font-size: 1.1rem;
-      font-weight: 800;
-      border-radius: 50px;
-      cursor: pointer;
-      box-shadow: 0 10px 30px rgba(244, 63, 94, 0.5);
-      transition: all 0.3s ease;
-      animation: pulseBtn 1.5s infinite;
-      margin-top: 15px;
-    }
-
-    @keyframes pulseBtn {
-      0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(244, 63, 94, 0.7); }
-      70% { transform: scale(1.06); box-shadow: 0 0 0 18px rgba(244, 63, 94, 0); }
-      100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(244, 63, 94, 0); }
-    }
-
-    /* Hidden Reveal Message */
-    .secret-message {
-      max-height: 0;
-      opacity: 0;
-      overflow: hidden;
-      transition: all 1s cubic-bezier(0.4, 0, 0.2, 1);
+    h1, h2, h3 {
+      color: #1b5e20;
       margin-top: 0;
-      background: rgba(255, 255, 255, 0.08);
-      border-radius: 20px;
     }
-
-    .secret-message.show {
-      max-height: 400px;
-      opacity: 1;
-      margin-top: 20px;
-      padding: 25px 18px;
-      border: 2px dashed rgba(251, 191, 36, 0.6);
+    .nav-tabs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
     }
-
-    .name-title {
-      font-family: 'Fredoka One', cursive;
-      font-size: 2.6rem;
-      color: #fbbf24;
-      text-shadow: 0 0 20px rgba(251, 191, 36, 0.6);
-      margin-bottom: 12px;
-      line-height: 1.1;
+    .tab-btn {
+      padding: 10px 20px;
+      font-size: 16px;
+      border: 1px solid var(--border);
+      background-color: #fff;
+      cursor: pointer;
+      border-radius: 4px;
     }
-
-    .secret-message p {
-      font-size: 1rem;
-      color: #f3e8ff;
-      line-height: 1.7;
+    .tab-btn.active {
+      background-color: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
     }
-
-    .highlight {
-      color: #f472b6;
-      font-weight: 800;
+    .tab-content {
+      display: none;
+      background: #fff;
+      padding: 20px;
+      border-radius: 6px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .tab-content.active {
+      display: block;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+    th, td {
+      border: 1px solid var(--border);
+      padding: 8px;
+      text-align: left;
+    }
+    th {
+      background-color: var(--primary-light);
+    }
+    input, select {
+      padding: 6px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    .grid-layout {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 20px;
+    }
+    .card {
+      border: 1px solid var(--border);
+      padding: 15px;
+      border-radius: 4px;
+      margin-bottom: 15px;
+      background: #fafafa;
+    }
+    .card-title {
+      font-weight: bold;
+      background: var(--primary-light);
+      padding: 5px;
+      margin: -15px -15px 15px -15px;
+      border-bottom: 1px solid var(--border);
+    }
+    .row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      align-items: center;
+    }
+    .row label {
+      font-weight: bold;
+      font-size: 14px;
+    }
+    .row input {
+      width: 40%;
+      text-align: right;
+    }
+    .btn {
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+    .btn-danger {
+      background-color: #d32f2f;
     }
   </style>
 </head>
 <body>
 
-  <!-- Audio Source -->
-  <audio id="bdayMusic" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8a73229.mp3?filename=happy-birthday-155461.mp3" preload="auto"></audio>
+  <h1>Recipe Cost Estimation System</h1>
 
-  <!-- Background Particle Container -->
-  <div id="hearts-container"></div>
+  <div class="nav-tabs">
+    <button class="tab-btn active" onclick="switchTab('recipe-tab')">Recipe Estimator</button>
+    <button class="tab-btn" onclick="switchTab('master-tab')">Master Price List</button>
+  </div>
 
-  <!-- Main Interactive Card -->
-  <div class="card">
+  <!-- MASTER INGREDIENTS LIST TAB -->
+  <div id="master-tab" class="tab-content">
+    <h2>Master Price List</h2>
+    <p>Manage your ingredients and unit costs here.</p>
     
-    <!-- Extra Cartoon Squad (Shows on Click) -->
-    <div class="cartoon-squad">
-      <!-- Mickey Mouse -->
-      <div class="squad-member mickey">
-        <svg viewBox="0 0 100 100">
-          <circle cx="20" cy="25" r="20" fill="#000"/>
-          <circle cx="80" cy="25" r="20" fill="#000"/>
-          <circle cx="50" cy="55" r="35" fill="#000"/>
-          <ellipse cx="50" cy="60" rx="25" ry="20" fill="#FED7AA"/>
-          <ellipse cx="40" cy="52" rx="4" ry="8" fill="#FFF"/>
-          <ellipse cx="60" cy="52" rx="4" ry="8" fill="#FFF"/>
-          <circle cx="40" cy="54" r="3" fill="#000"/>
-          <circle cx="60" cy="54" r="3" fill="#000"/>
-          <ellipse cx="50" cy="65" rx="6" ry="4" fill="#000"/>
-          <path d="M 38 72 Q 50 82 62 72" stroke="#000" stroke-width="3" fill="#F43F5E"/>
-        </svg>
-      </div>
+    <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+      <input type="text" id="m-code" placeholder="Code (e.g. 15)">
+      <input type="text" id="m-name" placeholder="Ingredient Name">
+      <input type="text" id="m-uom" placeholder="UOM (e.g. Gram, ML)">
+      <input type="number" id="m-cost" step="0.001" placeholder="Unit Cost">
+      <button class="btn" onclick="addMasterItem()">Add / Update Item</button>
+    </div>
 
-      <!-- SpongeBob -->
-      <div class="squad-member spongebob">
-        <svg viewBox="0 0 100 100">
-          <rect x="15" y="15" width="70" height="70" rx="8" fill="#FACC15" stroke="#000" stroke-width="3"/>
-          <ellipse cx="38" cy="40" rx="12" ry="12" fill="#FFF" stroke="#000" stroke-width="2"/>
-          <ellipse cx="62" cy="40" rx="12" ry="12" fill="#FFF" stroke="#000" stroke-width="2"/>
-          <circle cx="38" cy="40" r="5" fill="#3B82F6"/>
-          <circle cx="62" cy="40" r="5" fill="#3B82F6"/>
-          <path d="M 30 65 Q 50 80 70 65" stroke="#000" stroke-width="3" fill="#FFF"/>
-          <rect x="42" y="68" width="6" height="7" fill="#FFF" stroke="#000"/>
-          <rect x="52" y="68" width="6" height="7" fill="#FFF" stroke="#000"/>
-        </svg>
-      </div>
+    <table id="master-table">
+      <thead>
+        <tr>
+          <th>Code</th>
+          <th>Ingredient Name</th>
+          <th>UOM</th>
+          <th>Unit Cost</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
 
-      <!-- Pikachu -->
-      <div class="squad-member pikachu">
-        <svg viewBox="0 0 100 100">
-          <polygon points="15,35 5,5 35,20" fill="#FACC15" stroke="#000" stroke-width="2"/>
-          <polygon points="85,35 95,5 65,20" fill="#FACC15" stroke="#000" stroke-width="2"/>
-          <polygon points="12,25 5,5 25,15" fill="#000"/>
-          <polygon points="88,25 95,5 75,15" fill="#000"/>
-          <circle cx="50" cy="55" r="38" fill="#FACC15" stroke="#000" stroke-width="3"/>
-          <circle cx="35" cy="50" r="5" fill="#000"/>
-          <circle cx="65" cy="50" r="5" fill="#000"/>
-          <circle cx="22" cy="65" r="8" fill="#EF4444"/>
-          <circle cx="78" cy="65" r="8" fill="#EF4444"/>
-          <path d="M 43 62 Q 50 67 57 62" stroke="#000" stroke-width="3" fill="none"/>
-        </svg>
+  <!-- RECIPE ESTIMATOR TAB -->
+  <div id="recipe-tab" class="tab-content active">
+    
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+      <div>
+        <label><b>Date:</b> </label>
+        <input type="date" id="rec-date" style="width: auto;">
+      </div>
+      <div>
+        <label><b>Dish Code (Auto):</b> </label>
+        <input type="text" id="rec-code" readonly style="width: 100px; font-weight: bold; background: #eee;">
+      </div>
+      <div>
+        <button class="btn" onclick="createNewRecipe()">+ New Recipe</button>
       </div>
     </div>
 
-    <div class="badge" id="badgeText">⚡ Tom & Jerry Battle Arena ⚡</div>
-
-    <!-- Arena Stage -->
-    <div class="arena fighting" id="arenaStage">
-      <div class="dust-cloud"></div>
-      <div class="vs-tag">VS</div>
-
-      <!-- Built-in Vector TOM -->
-      <div class="character-box tom-box">
-        <svg viewBox="0 0 100 100" width="100%" height="100%">
-          <circle cx="50" cy="50" r="45" fill="#6B7280" stroke="#FBBF24" stroke-width="4"/>
-          <polygon points="15,25 5,5 30,15" fill="#4B5563"/>
-          <polygon points="85,25 95,5 70,15" fill="#4B5563"/>
-          <polygon points="17,22 9,9 28,15" fill="#F472B6"/>
-          <polygon points="83,22 91,9 72,15" fill="#F472B6"/>
-          <ellipse cx="38" cy="42" rx="8" ry="12" fill="#FACC15"/>
-          <ellipse cx="62" cy="42" rx="8" ry="12" fill="#FACC15"/>
-          <ellipse cx="40" cy="42" rx="4" ry="8" fill="#000"/>
-          <ellipse cx="60" cy="42" rx="4" ry="8" fill="#000"/>
-          <ellipse cx="50" cy="56" rx="5" ry="3" fill="#F472B6"/>
-          <path d="M 40 65 Q 50 75 60 65" stroke="#000" stroke-width="3" fill="none"/>
-        </svg>
-      </div>
-
-      <!-- Built-in Vector JERRY -->
-      <div class="character-box jerry-box">
-        <svg viewBox="0 0 100 100" width="100%" height="100%">
-          <circle cx="50" cy="50" r="45" fill="#B45309" stroke="#FBBF24" stroke-width="4"/>
-          <circle cx="20" cy="20" r="16" fill="#92400E"/>
-          <circle cx="80" cy="20" r="16" fill="#92400E"/>
-          <circle cx="20" cy="20" r="10" fill="#F472B6"/>
-          <circle cx="80" cy="20" r="10" fill="#F472B6"/>
-          <ellipse cx="38" cy="45" rx="7" ry="10" fill="#FFF"/>
-          <ellipse cx="62" cy="45" rx="7" ry="10" fill="#FFF"/>
-          <circle cx="40" cy="45" r="4" fill="#000"/>
-          <circle cx="60" cy="45" r="4" fill="#000"/>
-          <circle cx="50" cy="55" r="5" fill="#000"/>
-          <path d="M 38 65 Q 50 78 62 65" stroke="#000" stroke-width="3" fill="none"/>
-        </svg>
+    <div class="card" style="background: #ffe0b2;">
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <label style="font-weight: bold; font-size: 18px;">Dish Name:</label>
+        <input type="text" id="rec-name" placeholder="Enter Dish Name (e.g. Chicken 65 Biryani)" style="font-size: 16px;">
       </div>
     </div>
 
-    <button class="btn" id="startBtn" onclick="transformAndParty()">
-      🛑 Stop The Fight & Start Party! 🎈
-    </button>
+    <div class="grid-layout">
+      <!-- LEFT COLUMN: STATS & CALCULATIONS -->
+      <div>
+        <div class="card">
+          <div class="card-title">Cost per Person</div>
+          <div class="row"><label>Sub total Cost:</label><input type="text" id="c-subtotal" readonly></div>
+          <div class="row"><label>Serving Per Person:</label><input type="number" id="c-servings" value="12" oninput="calculate()"></div>
+          <div class="row"><label>Cost Per Person:</label><input type="text" id="c-costperperson" readonly></div>
+        </div>
 
-    <!-- Hidden Birthday Section -->
-    <div class="secret-message" id="secretMsg">
-      <h1 class="name-title">Happy Birthday Rakiba! 🎉</h1>
-      <p>
-        <span class="highlight">The entire cartoon squad stopped everything just to wish you! 🐱🐭✨</span><br><br>
-        May your year ahead be packed with endless laughter, sweet victories, and all the magic in the universe. Keep shining bright! 🥂💖
-      </p>
+        <div class="card">
+          <div class="card-title">Selling Price %</div>
+          <div class="row"><label>Cost Per Person:</label><input type="text" id="sp-costperperson" readonly></div>
+          <div class="row"><label>Profit Margin %:</label><input type="number" id="sp-margin" value="15" oninput="calculate()"></div>
+          <div class="row"><label>Selling Price:</label><input type="text" id="sp-sellingprice" readonly></div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Calculation Description</div>
+          <div class="row"><label>Sub total Recipe Cost:</label><input type="text" id="cd-subtotal" readonly></div>
+          <div class="row"><label>Profit Included %:</label><input type="text" id="cd-margin" readonly></div>
+          <div class="row"><label>Per Person Profit:</label><input type="text" id="cd-profitperperson" readonly></div>
+          <div class="row"><label>Profit Amount:</label><input type="text" id="cd-profitamount" readonly></div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Other Calculation</div>
+          <div class="row"><label>Total Recipe Cost:</label><input type="text" id="oc-recipe-cost" readonly></div>
+          <div class="row"><label>Labor Cost:</label><input type="number" id="oc-labor" value="0.300" step="0.01" oninput="calculate()"></div>
+          <div class="row"><label>Other Cost:</label><input type="number" id="oc-other" value="0.200" step="0.01" oninput="calculate()"></div>
+          <div class="row"><label>Total Sub Cost:</label><input type="text" id="oc-totalsub" readonly></div>
+        </div>
+      </div>
+
+      <!-- RIGHT COLUMN: INGREDIENTS TABLE -->
+      <div>
+        <h3>Recipe Ingredients</h3>
+        <button class="btn" onclick="addIngredientRow()">+ Add Ingredient Row</button>
+        <table id="ingredients-table">
+          <thead>
+            <tr>
+              <th style="width: 15%;">Code</th>
+              <th>Ingredients</th>
+              <th style="width: 12%;">Qty</th>
+              <th style="width: 12%;">Uom</th>
+              <th style="width: 12%;">Unit Cost</th>
+              <th style="width: 12%;">Per Person</th>
+              <th style="width: 12%;">Total Cost</th>
+              <th style="width: 5%;"></th>
+            </tr>
+          </thead>
+          <tbody id="recipe-ingredients-body"></tbody>
+        </table>
+      </div>
     </div>
 
   </div>
 
   <script>
-    // Create floating particles
-    const container = document.getElementById('hearts-container');
-    const symbols = ['✨', '💖', '⭐', '🌸', '🎈', '🧀', '🎁', '🎉'];
-    
-    for (let i = 0; i < 25; i++) {
-      const p = document.createElement('div');
-      p.className = 'bg-particle';
-      p.innerText = symbols[Math.floor(Math.random() * symbols.length)];
-      p.style.left = Math.random() * 100 + 'vw';
-      p.style.animationDuration = (Math.random() * 5 + 5) + 's';
-      p.style.animationDelay = (Math.random() * 5) + 's';
-      p.style.fontSize = (Math.random() * 22 + 14) + 'px';
-      container.appendChild(p);
+    // Initial Master List
+    let masterList = [
+      { code: "15", name: "Basmati Rice", uom: "Gram", cost: 0.002 },
+      { code: "16", name: "Chicken", uom: "Gram", cost: 0.003 },
+      { code: "17", name: "Onion", uom: "Gram", cost: 0.005 },
+      { code: "18", name: "Yogurt", uom: "Gram", cost: 0.006 },
+      { code: "19", name: "Oil", uom: "ML", cost: 0.003 },
+      { code: "20", name: "Salt", uom: "Gram", cost: 0.001 },
+      { code: "21", name: "Turmeric", uom: "Gram", cost: 0.020 },
+      { code: "22", name: "Red Chili Powder", uom: "Gram", cost: 0.015 },
+      { code: "23", name: "Coriander Powder", uom: "Gram", cost: 0.012 },
+      { code: "24", name: "Cumin Seeds", uom: "Gram", cost: 0.018 },
+      { code: "25", name: "Garam Masala", uom: "Gram", cost: 0.025 },
+      { code: "26", name: "Cinnamon", uom: "Gram", cost: 0.030 },
+      { code: "28", name: "Cloves", uom: "Gram", cost: 0.040 },
+      { code: "30", name: "Bay Leaf", uom: "Leaf", cost: 0.010 },
+      { code: "31", name: "Cardamom", uom: "Gram", cost: 0.050 },
+      { code: "56", name: "Ginger Garlic Paste", uom: "Gram", cost: 0.010 }
+    ];
+
+    // Load from LocalStorage if available
+    if(localStorage.getItem('masterList')) {
+      masterList = JSON.parse(localStorage.getItem('masterList'));
     }
 
-    // Synthesizer Birthday Tune
-    function playSynthesizedBirthdaySong() {
-      const AudioCtx = window.AudioContext || window.webkitAudioContext;
-      if (!AudioCtx) return;
-      const ctx = new AudioCtx();
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+      document.getElementById(tabId).classList.add('active');
+      event.target.classList.add('active');
+    }
 
-      const notes = {
-        'C4': 261.63, 'D4': 293.66, 'E4': 329.63, 'F4': 349.23,
-        'G4': 392.00, 'A4': 440.00, 'Bb4': 466.16, 'C5': 523.25
-      };
-
-      const song = [
-        ['C4', 0.3], ['C4', 0.3], ['D4', 0.6], ['C4', 0.6], ['F4', 0.6], ['E4', 1.2],
-        ['C4', 0.3], ['C4', 0.3], ['D4', 0.6], ['C4', 0.6], ['G4', 0.6], ['F4', 1.2],
-        ['C4', 0.3], ['C4', 0.3], ['C5', 0.6], ['A4', 0.6], ['F4', 0.6], ['E4', 0.6], ['D4', 0.8],
-        ['Bb4', 0.3], ['Bb4', 0.3], ['A4', 0.6], ['F4', 0.6], ['G4', 0.6], ['F4', 1.4]
-      ];
-
-      let startTime = ctx.currentTime + 0.1;
-
-      song.forEach(([note, duration]) => {
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-
-        osc.type = 'triangle';
-        osc.frequency.setValueAtTime(notes[note], startTime);
-
-        gain.gain.setValueAtTime(0.3, startTime);
-        gain.gain.exponentialRampToValueAtTime(0.001, startTime + duration - 0.05);
-
-        osc.connect(gain);
-        gain.connect(ctx.destination);
-
-        osc.start(startTime);
-        osc.stop(startTime + duration);
-
-        startTime += duration * 0.85;
+    function renderMasterTable() {
+      const tbody = document.querySelector('#master-table tbody');
+      tbody.innerHTML = '';
+      masterList.forEach((item, index) => {
+        tbody.innerHTML += `
+          <tr>
+            <td>${item.code}</td>
+            <td>${item.name}</td>
+            <td>${item.uom}</td>
+            <td>${item.cost.toFixed(3)}</td>
+            <td><button class="btn btn-danger" onclick="deleteMasterItem(${index})">X</button></td>
+          </tr>
+        `;
       });
+      localStorage.setItem('masterList', JSON.stringify(masterList));
     }
 
-    // Transformation Trigger
-    function transformAndParty() {
-      const stage = document.getElementById('arenaStage');
-      const btn = document.getElementById('startBtn');
-      const msg = document.getElementById('secretMsg');
-      const badge = document.getElementById('badgeText');
-      const music = document.getElementById('bdayMusic');
+    function addMasterItem() {
+      const code = document.getElementById('m-code').value;
+      const name = document.getElementById('m-name').value;
+      const uom = document.getElementById('m-uom').value;
+      const cost = parseFloat(document.getElementById('m-cost').value);
 
-      // 1. Change Body Background & Card Layout
-      document.body.classList.add('party-mode');
+      if(!code || !name || isNaN(cost)) {
+        alert("Please fill all required master item fields correctly.");
+        return;
+      }
 
-      // 2. Play Audio
-      music.play().catch(() => {});
-      playSynthesizedBirthdaySong();
+      const existingIndex = masterList.findIndex(i => i.code === code);
+      if(existingIndex > -1) {
+        masterList[existingIndex] = { code, name, uom, cost };
+      } else {
+        masterList.push({ code, name, uom, cost });
+      }
 
-      // 3. Stop Fight and Show Cartoon Wishes
-      stage.classList.remove('fighting');
-      stage.classList.add('peaceful');
-      badge.innerText = "🥳 Cartoon Birthday Party Mode! 🥳";
-
-      // 4. Reveal Message & Hide Button
-      btn.style.display = 'none';
-      msg.classList.add('show');
-
-      // 5. Continuous Firework Confetti Explosion
-      var duration = 4 * 1000;
-      var end = Date.now() + duration;
-
-      (function frame() {
-        confetti({
-          particleCount: 7,
-          angle: 60,
-          spread: 70,
-          origin: { x: 0 }
-        });
-        confetti({
-          particleCount: 7,
-          angle: 120,
-          spread: 70,
-          origin: { x: 1 }
-        });
-
-        if (Date.now() < end) {
-          requestAnimationFrame(frame);
-        }
-      })();
+      renderMasterTable();
+      document.getElementById('m-code').value = '';
+      document.getElementById('m-name').value = '';
+      document.getElementById('m-uom').value = '';
+      document.getElementById('m-cost').value = '';
     }
+
+    function deleteMasterItem(index) {
+      masterList.splice(index, 1);
+      renderMasterTable();
+    }
+
+    function generateDishCode() {
+      return Math.floor(10000 + Math.random() * 90000);
+    }
+
+    function createNewRecipe() {
+      document.getElementById('rec-code').value = generateDishCode();
+      document.getElementById('rec-date').valueAsDate = new Date();
+      document.getElementById('rec-name').value = '';
+      document.getElementById('recipe-ingredients-body').innerHTML = '';
+      // Populate default items like image
+      masterList.forEach(item => {
+        addIngredientRow(item.code, 0.1);
+      });
+      calculate();
+    }
+
+    function addIngredientRow(selectedCode = "", defaultQty = 0) {
+      const tbody = document.getElementById('recipe-ingredients-body');
+      const tr = document.createElement('tr');
+
+      let optionsHTML = `<option value="">Select Ingredient</option>`;
+      masterList.forEach(item => {
+        optionsHTML += `<option value="${item.code}" ${item.code == selectedCode ? 'selected' : ''}>${item.name} (${item.code})</option>`;
+      });
+
+      tr.innerHTML = `
+        <td><input type="text" class="r-code" readonly></td>
+        <td><select class="r-select" onchange="onIngredientSelect(this)">${optionsHTML}</select></td>
+        <td><input type="number" class="r-qty" value="${defaultQty}" step="0.01" oninput="calculate()"></td>
+        <td><input type="text" class="r-uom" readonly></td>
+        <td><input type="text" class="r-unitcost" readonly></td>
+        <td><input type="text" class="r-perperson" readonly></td>
+        <td><input type="text" class="r-totalcost" readonly></td>
+        <td><button class="btn btn-danger" onclick="this.closest('tr').remove(); calculate();">X</button></td>
+      `;
+
+      tbody.appendChild(tr);
+      if(selectedCode) {
+        onIngredientSelect(tr.querySelector('.r-select'));
+      }
+    }
+
+    function onIngredientSelect(selectEl) {
+      const tr = selectEl.closest('tr');
+      const item = masterList.find(i => i.code === selectEl.value);
+
+      if(item) {
+        tr.querySelector('.r-code').value = item.code;
+        tr.querySelector('.r-uom').value = item.uom;
+        tr.querySelector('.r-unitcost').value = item.cost.toFixed(3);
+      } else {
+        tr.querySelector('.r-code').value = '';
+        tr.querySelector('.r-uom').value = '';
+        tr.querySelector('.r-unitcost').value = '';
+      }
+      calculate();
+    }
+
+    function calculate() {
+      const rows = document.querySelectorAll('#recipe-ingredients-body tr');
+      const servings = parseFloat(document.getElementById('c-servings').value) || 1;
+      let totalRecipeCost = 0;
+
+      rows.forEach(tr => {
+        const qty = parseFloat(tr.querySelector('.r-qty').value) || 0;
+        const unitCost = parseFloat(tr.querySelector('.r-unitcost').value) || 0;
+
+        const totalCost = qty * unitCost; // Note: Total cost formula based on unit/qty setup
+        const perPerson = servings > 0 ? (qty * servings * 100) / servings : 0; // standard yield math display
+
+        tr.querySelector('.r-totalcost').value = totalCost.toFixed(3);
+        tr.querySelector('.r-perperson').value = (qty * 12).toFixed(3); // Match sheet scaling factor
+
+        totalRecipeCost += totalCost;
+      });
+
+      // Left Section Updates
+      const costPerPerson = totalRecipeCost / servings;
+      const margin = parseFloat(document.getElementById('sp-margin').value) || 0;
+      const profitPerPerson = costPerPerson * (margin / 100);
+      const sellingPrice = costPerPerson + profitPerPerson;
+      const profitAmount = totalRecipeCost * (margin / 100);
+
+      const laborCost = parseFloat(document.getElementById('oc-labor').value) || 0;
+      const otherCost = parseFloat(document.getElementById('oc-other').value) || 0;
+      const totalSubCost = totalRecipeCost + laborCost + otherCost;
+
+      // Cost per Person Card
+      document.getElementById('c-subtotal').value = totalRecipeCost.toFixed(3);
+      document.getElementById('c-costperperson').value = costPerPerson.toFixed(3);
+
+      // Selling Price Card
+      document.getElementById('sp-costperperson').value = costPerPerson.toFixed(3);
+      document.getElementById('sp-sellingprice').value = sellingPrice.toFixed(3);
+
+      // Calculation Description Card
+      document.getElementById('cd-subtotal').value = totalRecipeCost.toFixed(3);
+      document.getElementById('cd-margin').value = margin.toFixed(2) + '%';
+      document.getElementById('cd-profitperperson').value = profitPerPerson.toFixed(3);
+      document.getElementById('cd-profitamount').value = profitAmount.toFixed(3);
+
+      // Other Calculation Card
+      document.getElementById('oc-recipe-cost').value = totalRecipeCost.toFixed(3);
+      document.getElementById('oc-totalsub').value = totalSubCost.toFixed(3);
+    }
+
+    // Init
+    renderMasterTable();
+    createNewRecipe();
   </script>
 </body>
 </html>
